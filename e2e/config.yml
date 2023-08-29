@@ -1,0 +1,47 @@
+aws:
+  # Queue consumed by scan service
+  queue: https://sqs.us-east-1.amazonaws.com/000000000100/sqs-queue
+  region: us-east-1
+  resolver: test
+
+redis:
+  url: localhost:6379
+  useTLS: false
+
+scanner:
+  internalbucket: scanner-internal-bucket
+  virustotal:
+    maxrpm: 4
+    threshold: 10.0
+  yara:
+    rulesdir: /app/data/rules
+  # List of buckets for which we don't scan all files always
+  scanProbabilities:
+    samples-scanner-sandbox: 1.0
+
+  # Path inside buckets we don`t scan
+  allowlist:
+    samples-scanner-sandbox:
+      - /notscan
+      - /notscan2
+
+  # Enable debug log (do not use in production, really verbose)
+  debugLog: true
+
+  # Limit of size for single key to be analyzed (equivalent to 10 Gb)
+  sizeLimit: 10737418240
+  maxStorageSize: 21474836480
+
+httpserver:
+  metrics: false
+  swagger: false
+  profiler: false
+  maxRequestSize: 52428800
+  port: 3000
+
+# Notifications numbers
+# TODO: Print info message saying phone notification is disable
+notification:
+  updateInterval: 10
+  slack:
+    channelId: XXXXXXXXX

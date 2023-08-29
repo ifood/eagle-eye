@@ -1,0 +1,40 @@
+aws:
+  queue: http://127.0.0.1:4566/000000000000/scanner-queue
+  region: us-east-1
+  resolver: http://localstack:4566
+
+redis:
+  url: redis:6379
+  useTLS: false
+
+scanner:
+  internalbucket: scanner-internal-bucket
+  virustotal:
+    maxrpm: 4
+    threshold: 10.0
+  yara:
+    rulesdir: /app/data/rules
+
+  scanProbabilities:
+    samples-scanner-sandbox: 1.0
+
+  allowlist:
+    samples-scanner-sandbox:
+      - /notscan
+      - /notscan2
+
+  debugLog: false
+  sizeLimit: 10737418240
+  maxStorageSize: 21474836480
+
+httpserver:
+  metrics: true
+  swagger: true
+  profiler: false
+  maxRequestSize: 52428800
+  port: 3000
+
+notification:
+  updateInterval: 60
+  slack:
+    channel_id: CGTCMCPSM

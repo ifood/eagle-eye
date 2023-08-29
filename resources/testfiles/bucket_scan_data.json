@@ -1,0 +1,35 @@
+[
+  {
+    "ScanId" : "00bbc09d-7740-47ac-a89a-ffc73e1aa392",
+    "Bucket" : "sample-bucket-1",
+    "Scanned" : 1,
+    "Bypassed" : 1,
+    "Matches" : 1,
+    "Errors" : 1,
+    "Entropy" : {"0": 1, "1": 1, "2": 2, "3": 3, "4": 4, "5":5, "6": 6, "7": 7, "8": 8},
+    "Requests" : 1,
+    "LastUpdate" : "2023-01-06T10:00:00Z"
+  },
+  {
+    "scan_id" : "1afad2e3-7c98-4266-b5dd-852232e0cd22",
+    "bucket" : "sample-bucket-2",
+    "scanned" : 1,
+    "bypassed" : 1,
+    "matches" : 1,
+    "errors" : 1,
+    "entropy" : {"0": 1, "1": 1, "2": 2, "3": 3, "4": 4, "5":5, "6": 6, "7": 7, "8": 8},
+    "requests" : 1,
+    "LastUpdate" : "2023-01-07T10:00:00Z"
+  },
+  {
+    "scan_id" : "519c4de0-2390-4061-89d5-ad22f1a2f8e9",
+    "bucket" : "sample-bucket-1",
+    "scanned" : 1,
+    "bypassed" : 1,
+    "matches" : 1,
+    "errors" : 1,
+    "entropy" : {"0": 1, "1": 1, "2": 2, "3": 3, "4": 4, "5":5, "6": 6, "7": 7, "8": 8},
+    "requests" : 1,
+    "LastUpdate" : "2023-01-07T10:00:00Z"
+  }
+]
