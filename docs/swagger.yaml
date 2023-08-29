@@ -1,0 +1,228 @@
+basePath: /v1/
+definitions:
+  entities.ObjectScanResponse:
+    properties:
+      error:
+        type: string
+      result:
+        additionalProperties:
+          $ref: '#/definitions/entities.ScanResponse'
+        type: object
+    type: object
+  entities.RequestObjectScan:
+    properties:
+      bucket:
+        type: string
+      key:
+        type: string
+      region:
+        type: string
+    required:
+    - bucket
+    - key
+    - region
+    type: object
+  entities.ScanResponse:
+    properties:
+      bucket:
+        type: string
+      bypassed:
+        type: integer
+      entropy:
+        additionalProperties:
+          type: integer
+        type: object
+      errors:
+        type: integer
+      matches:
+        type: integer
+      requests:
+        type: integer
+      scanned:
+        type: integer
+    type: object
+  entities.ScheduleResponse:
+    properties:
+      error:
+        type: string
+      id:
+        type: string
+    type: object
+info:
+  contact:
+    email: security-engineering@ifood.com.br
+    name: Security Engineering
+  description: Scanner service is able to scan files as they arrive at your cloud
+    bob storage
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Scanner service
+  version: "1.0"
+paths:
+  /files:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: File to be scanned
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.ScheduleResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entities.ScheduleResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entities.ScheduleResponse'
+      security:
+      - ApiKey: []
+      summary: Schedules file for scan
+      tags:
+      - files
+  /files/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Scan id returned by the file schedule endpoint
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+      security:
+      - ApiKey: []
+      summary: Get individual file scan result
+      tags:
+      - files
+  /objects:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Restrict result to specific bucket
+        in: query
+        name: bucket
+        type: string
+      - description: Restrict result to single day or month
+        in: query
+        name: period
+        type: string
+      - description: Reference date with format YYYY-MM-DD
+        in: query
+        name: date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+      security:
+      - ApiKey: []
+      summary: Get aggregate bucket scan result
+      tags:
+      - objects
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Object to be scanned
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entities.RequestObjectScan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.ScheduleResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entities.ScheduleResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entities.ScheduleResponse'
+      security:
+      - ApiKey: []
+      summary: Schedules object from bucket for scan
+      tags:
+      - objects
+  /objects/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Scan id returned by the object schedule endpoint
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entities.ObjectScanResponse'
+      security:
+      - ApiKey: []
+      summary: Get individual object scan result
+      tags:
+      - objects
+securityDefinitions:
+  ApiKey:
+    description: Only needed if server was started with enforced authorization. Type
+      \'Bearer\' and then your apikey.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  scanner:
+    image: eagleeye-local
+    environment:
+      - NOTIFICATION_PHONES="+5511991111111,+5522992222222"
+      - NOTIFICATION_SLACK_APPTOKEN="xoxb-<replace-but-NEVER-COMMIT>"
+      - NOTIFICATION_SLACK_WEBHOOK="https://hooks.slack.com/services/<replace-but-NEVER-COMMIT>"
+      - REDIS_PASSWORD=""
+      - SCANNER_CIPHERPASS="empty"
+      - SCANNER_VIRUSTOTAL="<replace-but-NEVER-COMMIT>"
+      - AWS_ACCESS_KEY_ID=fake_id
+      - AWS_SECRET_ACCESS_KEY=fake_acess_key
+      - AWS_DEFAULT_REGION=us-east-1
+      - DD_AGENT_HOST=127.0.0.1
+      # User apikeys should be passed as a secret, and obviously not commited to the repo.
+      # Please, generate one apikey for each user with the command below. Note, "openssl rand -hex 32" generates the apikey. Server expects the sha256 of the apikey.
+      # Eg.: openssl rand -hex 32 | sha256sum
+      # Sample apikey f00533f634f1047cfd1b1f31abf73b77934c6e8bf25640ecdcc8d1969cc4644b, hash: c6d9147389ec585a34ffd16d5c7034fb525fcfa773a67f4c399235e21ab80796
+      - HTTPSERVER_AUTHORIZATIONKEYS=alias1:c6d9147389ec585a34ffd16d5c7034fb525fcfa773a67f4c399235e21ab80796
+    links:
+      - redis
+      - localstack
+    depends_on:
+      localstack:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "3000:3000"
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+
+  localstack:
+    image: localstack/localstack:1.3.1
+    environment:
+      - SERVICES=sqs,s3
+      - DEBUG=1
+      - LOCALSTACK_HOSTNAME=localhost
+      - TEST_AWS_ACCOUNT_ID=000000000000
+      - AWS_DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./credentials:/root/.aws/credentials
+      - ./init/:/docker-entrypoint-initaws.d/
+      - /var/run/docker.sock:/var/run/docker.sock
